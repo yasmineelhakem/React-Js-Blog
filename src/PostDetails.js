@@ -25,7 +25,7 @@ const PostDetails = ({ posts, handleDelete }) => {
                     </Modal.Body>
 
                     <Modal.Footer>
-                        <Link to={`post/${post.id}`}>
+                        <Link to={`edit`}>
                             <Button variant="warning">Edit Post</Button>
                         </Link>
                         <Button variant="danger" onClick={() => handleDelete(post.id)}>
