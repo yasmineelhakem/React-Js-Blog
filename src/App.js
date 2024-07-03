@@ -3,13 +3,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Layout from './Layout.js';
 import Home from './Home';
 import About from './About';
-import Post from './Post';
+import AddPost from './AddPost';
 import PostDetails from './PostDetails';
 import { Route, Routes } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-
-
+import { format } from 'date-fns';
 
 function App() {
 
@@ -41,7 +40,8 @@ function App() {
   ])
 
   const [search, setSearch] = useState('')
-
+  const [postTitle, setPostTitle] = useState('')
+  const [postBody, setPostBody] = useState('')
 
   const navigate = useNavigate();
 
@@ -52,16 +52,36 @@ function App() {
   }
 
   const handleSearchClick =() => {
-    console.log('Search clicked with query:', search);
+    const filterBySearch = posts.filter((post) => {
+        if (((post.body).toLowerCase().includes(search.toLowerCase())) || (((post.title).toLowerCase()).includes(search.toLowerCase()))) { 
+          return post; }
+    })
+    setPosts(filterBySearch);
+  }
+
+  const handleSubmit =(e) => {
+    e.preventDefault();
+    const id = posts.length ? (parseInt(posts[posts.length - 1].id) + 1) : 1;
+    const datetime = format(new Date(), 'MMMM dd, yyyy pp');
+    const myNewPost = { id, title:postTitle,datetime:datetime, body:postBody };
+    const listPosts = [...posts, myNewPost];
+    setPosts(listPosts);
+    setPostTitle('');
+    setPostBody('');
+    navigate('/');
   }
 
   return (
     <Routes>
     <Route path="/" element={<Layout search={search} setSearch={setSearch} handleSearchClick={handleSearchClick} />}>
       <Route index element={<Home posts={posts}/>} />
-      <Route path="post" element={<Post />} />
       <Route path="about" element={<About />} />
       <Route path="post">
+          <Route index element={<AddPost postTitle={postTitle}
+                                         setPostTitle={setPostTitle}
+                                         postBody={postBody}
+                                         setPostBody={setPostBody}
+                                         handleSubmit={handleSubmit}/>} />
           <Route path=":id" element={<PostDetails 
             posts={posts}
             handleDelete={handleDelete}
