@@ -40,6 +40,9 @@ function App() {
     }
   ])
 
+  const [search, setSearch] = useState('')
+
+
   const navigate = useNavigate();
 
   const handleDelete = (id) => {
@@ -48,9 +51,13 @@ function App() {
     navigate(-1); // Go back to the previous page
   }
 
+  const handleSearchClick =() => {
+    console.log('Search clicked with query:', search);
+  }
+
   return (
     <Routes>
-    <Route path="/" element={<Layout />}>
+    <Route path="/" element={<Layout search={search} setSearch={setSearch} handleSearchClick={handleSearchClick} />}>
       <Route index element={<Home posts={posts}/>} />
       <Route path="post" element={<Post />} />
       <Route path="about" element={<About />} />

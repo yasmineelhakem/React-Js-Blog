@@ -68,22 +68,9 @@ body {
 
 .searchForm {
   width: 70%;
-  padding: 0.75rem 0.75rem 0.75rem 0.75rem;
-}
-
-.searchForm input[type="text"] {
-  font-family: 'Open Sans', sans-serif;
-  width: 100%;
-  min-height: 48px;
-  font-size: 1rem;
-  padding: 0.25rem;
-  border-radius: 0.25rem;
-  outline: none;
-}
-
-.searchForm label {
-  position: absolute;
-  left: -99999px;
+  padding: 0.5rem 0rem 0rem 0.5rem;
+  margin-top:0.5rem;
+  height:70%;
 }
 
 .Nav ul {
