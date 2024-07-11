@@ -73,18 +73,18 @@ export default createStore({
         }
     }),
 
-    searchClick: thunk(async (actions,payload, helpers) => {
+    searchClick: thunk(async (actions,helpers) => {
         const { search } = helpers.getState();
-        try{
+        try {
             const response = await api.get('/posts');
             const filterBySearch = response.data.filter((post) => {
-                if (((post.body).toLowerCase().includes(search.toLowerCase())) || (((post.title).toLowerCase()).includes(search.toLowerCase()))) { 
-                  return post; }
-            })
+                return post.body.toLowerCase().includes(search.toLowerCase()) || 
+                       post.title.toLowerCase().includes(search.toLowerCase());
+            });
             console.log('Filtered posts:', filterBySearch);
             actions.setPosts(filterBySearch);
-         }catch(err){
-          console.log(`Error filtering posts: ${err.message}`);
-         }
+        } catch (err) {
+            console.log(`Error filtering posts: ${err.message}`);
+        }
     })
 })
