@@ -73,7 +73,7 @@ export default createStore({
         }
     }),
 
-    searchClick: thunk(async (actions,helpers) => {
+    searchClick: thunk(async (actions, payload, helpers) => {
         const { search } = helpers.getState();
         try {
             const response = await api.get('/posts');
