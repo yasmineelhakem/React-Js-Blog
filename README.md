@@ -6,7 +6,7 @@ This is a simple blog application built with React, using Axios for API requests
 
 ### API
 
-This project interacts with an external API to manage posts. Ensure your API is running and accessible.
+This project interacts with an external API to manage posts. 
 
 ### State Management
 
