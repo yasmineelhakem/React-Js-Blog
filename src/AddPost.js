@@ -1,7 +1,33 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import { format } from 'date-fns';
+import { useStoreState, useStoreActions } from 'easy-peasy';
+import { useNavigate } from 'react-router-dom';
 
-function AddPost({postTitle, setPostTitle, postBody, setPostBody, handleSubmit}) {
+
+function AddPost() {
+
+  const posts = useStoreState((state) => state.posts);
+  const postTitle = useStoreState((state) => state.postTitle);
+  const postBody = useStoreState((state) => state.postBody);
+
+  const savePost = useStoreActions((actions) => actions.savePost);
+
+  const setPostTitle = useStoreActions((actions) => actions.setPostTitle);
+  const setPostBody = useStoreActions((actions) => actions.setPostBody);
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const id = posts.length ? (parseInt(posts[posts.length - 1].id) + 1) : 1;
+    const datetime = format(new Date(), 'MMMM dd, yyyy pp');
+    const myNewPost = { id, title:postTitle,datetime:datetime, body:postBody };
+    savePost(myNewPost);
+    navigate('/');
+    
+  }
+
   return (
     <main>
     <Form >

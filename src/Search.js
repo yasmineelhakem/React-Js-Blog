@@ -1,6 +1,18 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-const Search = ({ search, setSearch ,handleSearchClick }) => {
+import { useStoreState, useStoreActions } from 'easy-peasy';
+
+const Search = () => {
+
+    const searchClick = useStoreActions((actions) => actions.searchClick);
+
+    const search = useStoreState((state) => state.search);
+    const setSearch = useStoreActions((actions) => actions.setSearch);
+
+    const handleSearchClick =  () => {
+        searchClick();
+    }
+    
     return (
 
         <Form className="d-flex searchForm">

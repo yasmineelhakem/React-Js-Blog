@@ -2,11 +2,27 @@ import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import { format } from 'date-fns';
+import { useStoreState, useStoreActions } from 'easy-peasy';
+import { useNavigate } from 'react-router-dom';
 
-const EditPost = ({posts, handleEdit, editPostBody, setEditPostBody, editPostTitle, setEditPostTitle}) => {
+
+const EditPost = () => {
 
     const { id } = useParams();
-    const post = posts.find(post => (post.id).toString() === id);
+    //const post = posts.find(post => (post.id).toString() === id);
+
+    const editPostTitle = useStoreState((state) => state.editPostTitle);
+    const editPostBody = useStoreState((state) => state.editPostBody);
+
+    const editPost = useStoreActions((actions) => actions.editPost);
+    const setEditPostTitle = useStoreActions((actions) => actions.setEditPostTitle);
+    const setEditPostBody = useStoreActions((actions) => actions.setEditPostBody);
+
+    const getPostById = useStoreState((state) => state.getPostById);
+    const post = getPostById(id);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (post) {
@@ -14,6 +30,15 @@ const EditPost = ({posts, handleEdit, editPostBody, setEditPostBody, editPostTit
             setEditPostBody(post.body);
         }
     }, [post, setEditPostTitle, setEditPostBody])
+
+
+    const handleEdit =  (id) => {
+        const datetime = format(new Date(), 'MMMM dd, yyyy pp');
+        const editedPost = { id, title:editPostTitle,datetime:datetime, body:editPostBody };
+        editPost(editedPost);
+        navigate('/');
+       
+    }
 
     return (
 

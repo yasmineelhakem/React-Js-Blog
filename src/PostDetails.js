@@ -2,10 +2,24 @@ import { useParams, Link } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Badge from 'react-bootstrap/Badge';
+import { useStoreState, useStoreActions } from 'easy-peasy';
+import { useNavigate } from 'react-router-dom';
 
-const PostDetails = ({ posts, handleDelete }) => {
+
+const PostDetails = () => {
     const { id } = useParams();
-    const post = posts.find(post => (post.id).toString() === id);
+    //const post = posts.find(post => (post.id).toString() === id);
+    const deletePost = useStoreActions((actions) => actions.deletePost);
+    const getPostById = useStoreState((state) => state.getPostById);
+    const post = getPostById(id);
+
+    const navigate = useNavigate();
+
+    const handleDelete = (id) => {
+        deletePost(id);
+        navigate(-1); 
+    }
+
     return (
         <main >
             <article className="modal show"

@@ -7,20 +7,21 @@ import AddPost from './AddPost';
 import PostDetails from './PostDetails';
 import EditPost from './EditPost';
 import { Route, Routes } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { useEffect } from 'react';
 import api from './api/posts';
+import { useStoreActions } from 'easy-peasy';
 
 function App() {
 
+  const setPosts = useStoreActions((actions) => actions.setPosts);
+  /*
   const [posts, setPosts] = useState([])
   const [search, setSearch] = useState('')
   const [postTitle, setPostTitle] = useState('')
   const [postBody, setPostBody] = useState('')
   const [editPostTitle, setEditPostTitle] = useState('')
   const [editPostBody, setEditPostBody] = useState('')
-  const navigate = useNavigate();
+  const navigate = useNavigate();*/
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -40,86 +41,17 @@ function App() {
     }
 
     fetchPosts();
-  }, [])
-
-  const handleDelete = async (id) => {
-    try{
-      await api.delete(`/posts/${id}`);
-      const listPosts = posts.filter((item) => item.id !== id);
-      setPosts(listPosts);
-      navigate(-1);
-    }catch(err){
-      console.log(`Error deleting post: ${err.message}`);
-    }
-  }
-
-  const handleSearchClick = async () => {
-    try{
-      const response = await api.get('/posts');
-      const filterBySearch = response.data.filter((post) => {
-          if (((post.body).toLowerCase().includes(search.toLowerCase())) || (((post.title).toLowerCase()).includes(search.toLowerCase()))) { 
-            return post; }
-      })
-      setPosts(filterBySearch);
-   }catch(err){
-    console.log(`Error filtering posts: ${err.message}`);
-   }
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const id = posts.length ? (parseInt(posts[posts.length - 1].id) + 1) : 1;
-    const datetime = format(new Date(), 'MMMM dd, yyyy pp');
-    const myNewPost = { id, title:postTitle,datetime:datetime, body:postBody };
-    try{
-      const response = await api.post('/posts', myNewPost);  
-      const listPosts = [...posts, response.data];
-      setPosts(listPosts);
-      setPostTitle('');
-      setPostBody('');
-      navigate('/');
-    }catch(err){
-      console.log(`Error adding post: ${err.message}`);
-    }
-  }
-
-  const handleEdit = async (id) => {
-    const datetime = format(new Date(), 'MMMM dd, yyyy pp');
-    const editedPost = { id, title:editPostTitle,datetime:datetime, body:editPostBody };
-    try{
-      const response = await api.put(`/posts/${id}`, editedPost);  
-      setPosts(posts.map(post => post.id === id ? { ...response.data } : post));
-      setEditPostTitle('');
-      setEditPostBody('');
-      navigate('/');
-    }catch(err){
-      console.log(`Error adding post: ${err.message}`);
-    }
-  }
+  },[])
 
   return (
     <Routes>
-    <Route path="/" element={<Layout search={search} setSearch={setSearch} handleSearchClick={handleSearchClick} />}>
-      <Route index element={<Home posts={posts}/>} />
+    <Route path="/" element={<Layout  />}>
+      <Route index element={<Home />} />
       <Route path="about" element={<About />} />
       <Route path="post">
-          <Route index element={<AddPost postTitle={postTitle}
-                                         setPostTitle={setPostTitle}
-                                         postBody={postBody}
-                                         setPostBody={setPostBody}
-                                         handleSubmit={handleSubmit}/>} />
-          <Route path=":id/edit" element={<EditPost
-              posts={posts}
-              handleEdit={handleEdit}
-              editPostTitle={editPostTitle}
-              setEditPostTitle={setEditPostTitle}
-              editPostBody={editPostBody}
-              setEditPostBody={setEditPostBody}
-            />} />
-          <Route path=":id" element={<PostDetails 
-            posts={posts}
-            handleDelete={handleDelete}
-          />}  />
+          <Route index element={<AddPost />} />
+          <Route path=":id/edit" element={<EditPost />} />
+          <Route path=":id" element={<PostDetails />}  />
         </Route>
     </Route>
   </Routes>

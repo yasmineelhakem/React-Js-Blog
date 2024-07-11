@@ -1,7 +1,12 @@
 import React from 'react';
 import Post from './Post';
+import { useStoreState } from 'easy-peasy';
 
-const Home = ({posts}) => {
+
+const Home = () => {
+
+  const posts = useStoreState((state) => state.posts);
+
   return (
     <main className="main">
       {posts.length ? (
